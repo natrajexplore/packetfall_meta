@@ -1,7 +1,8 @@
 # Devpost submission draft — Packetfall
 
 **Track:** Gaming  **Division:** New Experience
-**Project link:** `https://<your-github-username>.github.io/packetfall/` (GitHub Pages, IWSDK/WebXR)
+**Project link:** https://natrajexplore.github.io/packetfall_meta/ (GitHub Pages, IWSDK/WebXR)  
+**Source:** https://github.com/natrajexplore/packetfall_meta
 **Video:** `<YouTube or Vimeo, public, under 3:00>`
 **Built with:** Immersive Web SDK (IWSDK), WebXR, Three.js, TypeScript, Vite, WebAudio
 
