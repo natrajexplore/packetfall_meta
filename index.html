@@ -17,7 +17,11 @@
       h1 span { color: var(--bad); }
       p { color: var(--dim); line-height: 1.5; font-size: 17px; }
       button { margin-top: 12px; font: 700 20px system-ui; padding: 16px 28px; border-radius: 999px; border: 0;
-        background: var(--ok); color: #04130c; cursor: pointer; }
+        background: var(--ok); color: #04130c; cursor: pointer; transition: transform .12s ease, filter .12s ease; }
+      button:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+      button:focus-visible { outline: 3px solid var(--dim); outline-offset: 3px; }
+      button:disabled { background: #2a3352; color: #9fb4ff; cursor: progress; }
+      .status { font-size: 14px; min-height: 1.5em; margin: 10px 0 0; }
       ul { text-align: left; color: var(--ink); line-height: 1.7; padding-left: 20px; }
       small { color: #7381a8; display: block; margin-top: 18px; }
     </style>
@@ -33,7 +37,8 @@
           <li>Rules are checked top-down. <b>First match wins.</b></li>
           <li>Deploy, watch every packet, read SENTRY, fix, redeploy.</li>
         </ul>
-        <button id="enter-mr">Enter mixed reality</button>
+        <button id="enter-mr" disabled>Loading…</button>
+        <p id="intro-status" class="status" role="status" aria-live="polite">Preparing the firewall…</p>
         <small>Hands only — no controllers needed. Best seated at a desk.</small>
       </div>
     </div>

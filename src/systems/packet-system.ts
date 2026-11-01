@@ -175,8 +175,7 @@ export class PacketSystem extends createSystem({
       }
     }
 
-    // Decay slot flashes
-    for (let i = 0; i < g.slotFlash.length; i++) g.slotFlash[i] = Math.max(0, g.slotFlash[i]! - dt * 2.5);
+    // (Slot hit flashes decay in GameSystem so they also settle after the run.)
 
     if (g.spawnQueue.length === 0 && this.queries.packets.entities.size === 0) {
       this.inspect.mesh.visible = false;

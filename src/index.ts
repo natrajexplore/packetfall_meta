@@ -26,17 +26,57 @@ World.create(
   // 2D landing overlay (desktop / Quest Browser before entering MR).
   const overlay = document.getElementById('intro');
   const enter = document.getElementById('enter-mr') as HTMLButtonElement | null;
+  const status = document.getElementById('intro-status');
+  const setStatus = (text: string) => {
+    if (status) status.textContent = text;
+  };
+  let wasImmersive = false;
+
   if (enter) {
-    if (!world.xrEnabled) {
-      enter.textContent = 'Play in browser emulator';
-    }
+    enter.disabled = false;
+    enter.textContent = world.xrEnabled ? 'Enter mixed reality' : 'Play in browser';
+    setStatus(
+      world.xrEnabled
+        ? 'Ready. Put on your headset and sit at a desk or table.'
+        : 'No XR headset detected — playing in the browser with mouse or touch.',
+    );
     enter.addEventListener('click', () => {
       sfx.unlock();
-      if (world.xrEnabled) world.launchXR();
       overlay?.classList.add('hidden');
+      if (!world.xrEnabled) return;
+      try {
+        // launchXR may return a promise; a rejected session request (permission
+        // denied, headset asleep) falls back to the in-browser board.
+        Promise.resolve(world.launchXR() as unknown).catch(() => {
+          setStatus('Could not start mixed reality. You can keep playing in the browser.');
+        });
+      } catch {
+        setStatus('Could not start mixed reality. You can keep playing in the browser.');
+      }
     });
   }
+
   world.visibilityState.subscribe((v) => {
-    if (v !== VisibilityState.NonImmersive) overlay?.classList.add('hidden');
+    if (v !== VisibilityState.NonImmersive) {
+      wasImmersive = true;
+      overlay?.classList.add('hidden');
+      return;
+    }
+    // Back from the headset: offer an easy way back in instead of a dead page.
+    if (wasImmersive && enter && world.xrEnabled) {
+      enter.textContent = 'Re-enter mixed reality';
+      setStatus('Session ended. Your progress is saved on this device.');
+      overlay?.classList.remove('hidden');
+    }
   });
+}).catch((err: unknown) => {
+  // Without a world there is nothing to play: say so instead of hanging on "Loading…".
+  console.error('[packetfall] failed to start', err);
+  const enter = document.getElementById('enter-mr') as HTMLButtonElement | null;
+  const status = document.getElementById('intro-status');
+  if (enter) enter.textContent = 'Unavailable';
+  if (status) {
+    status.textContent =
+      'Packetfall could not start in this browser (WebGL is required). Try the Meta Quest Browser or a recent Chrome/Edge.';
+  }
 });

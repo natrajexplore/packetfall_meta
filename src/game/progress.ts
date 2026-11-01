@@ -40,13 +40,45 @@ export function rankFor(xp: number): { title: string; next: number | null } {
   return { title: RANKS[idx]!.title, next };
 }
 
+function emptyProgress(): Progress {
+  return { ...EMPTY, stars: {}, dailyBest: {} };
+}
+
 export function loadProgress(): Progress {
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return { ...EMPTY, stars: {}, dailyBest: {} };
-    return { ...EMPTY, ...(JSON.parse(raw) as Partial<Progress>) };
+    if (!raw) return emptyProgress();
+    const parsed = JSON.parse(raw) as Partial<Progress> | null;
+    if (!parsed || typeof parsed !== 'object') return emptyProgress();
+    // Fresh nested objects so a partial save never aliases the EMPTY defaults.
+    return {
+      ...emptyProgress(),
+      ...parsed,
+      stars: { ...(parsed.stars ?? {}) },
+      dailyBest: { ...(parsed.dailyBest ?? {}) },
+      unlocked: Number.isFinite(parsed.unlocked) ? Math.max(0, parsed.unlocked as number) : 0,
+      xp: Number.isFinite(parsed.xp) ? Math.max(0, parsed.xp as number) : 0,
+    };
   } catch {
-    return { ...EMPTY, stars: {}, dailyBest: {} };
+    return emptyProgress();
+  }
+}
+
+const MUTE_KEY = 'packetfall.muted.v1';
+
+export function loadMuted(): boolean {
+  try {
+    return localStorage.getItem(MUTE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function saveMuted(m: boolean): void {
+  try {
+    localStorage.setItem(MUTE_KEY, m ? '1' : '0');
+  } catch {
+    /* storage unavailable */
   }
 }
 

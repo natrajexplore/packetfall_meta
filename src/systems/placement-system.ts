@@ -1,5 +1,5 @@
 /**
- * PlacementSystem — puts the board on the player's REAL table and opens the
+ * PlacementSystem â€” puts the board on the player's REAL table and opens the
  * packet portal on their REAL wall, using IWSDK scene understanding.
  *
  * Search order (built to survive rooms the developer never tested):
@@ -32,6 +32,10 @@ const SEARCH_SECONDS = 2.5;
 const DESK_MIN_Y = 0.35; // low enough for a sofa + coffee table setup
 const DESK_MAX_Y = 1.2;
 const MAX_REACH = 1.6;
+/** Board centre must land within this horizontal distance of the head, and
+ *  this far below it, or the cards are out of arm's reach â€” use the tray. */
+const COMFORT_REACH = 0.75;
+const MAX_DROP = 0.75;
 
 export class PlacementSystem extends createSystem({
   planes: { required: [XRPlane] },
@@ -74,8 +78,10 @@ export class PlacementSystem extends createSystem({
   private placeDesktop(): void {
     const board = this.g.board?.object3D;
     if (!board) return;
-    board.position.set(0, 0.72, -0.5);
-    board.quaternion.identity();
+    // World-space setters: on session end the board may still be parented to
+    // the scene-understanding anchor group, so a local write would be offset.
+    setWorldPosition(board, this.p.set(0, 0.72, -0.5));
+    setWorldQuaternion(board, this.q.identity());
     this.g.portalWorld.set(-0.62, 1.02, -1.45);
   }
 
@@ -138,7 +144,7 @@ export class PlacementSystem extends createSystem({
     // distance from head to the nearest point of the box footprint
     const cx = Math.max(b.min.x, Math.min(this.head.x, b.max.x));
     const cz = Math.max(b.min.z, Math.min(this.head.z, b.max.z));
-    // The table centre must be in front of the player (within ~70° of gaze).
+    // The table centre must be in front of the player (within ~70Â° of gaze).
     const dx = this.p.x - this.head.x;
     const dz = this.p.z - this.head.z;
     const len = Math.hypot(dx, dz) || 1;
@@ -161,11 +167,17 @@ export class PlacementSystem extends createSystem({
       this.p.x = b.max.x - b.min.x > margin * 2 ? Math.max(b.min.x + margin, Math.min(this.p.x, b.max.x - margin)) : midX;
       this.p.z = b.max.z - b.min.z > margin * 2 ? Math.max(b.min.z + margin, Math.min(this.p.z, b.max.z - margin)) : midZ;
       this.p.y = b.max.y + 0.002;
-      if (!g.level.peek()?.guided) g.hint.value = 'Board locked to your table. Threats will come through your wall.';
+      const reach = Math.hypot(this.p.x - this.head.x, this.p.z - this.head.z);
+      if (reach > COMFORT_REACH || this.head.y - this.p.y > MAX_DROP) {
+        // The table is real but too far or too low to play on: float the tray.
+        this.place(false);
+        return;
+      }
+      if (this.canSetHint()) g.hint.value = 'Board locked to your table. Threats will come through your wall.';
     } else {
       this.p.copy(this.head).addScaledVector(this.fwd, 0.5);
       this.p.y = this.head.y - 0.42;
-      if (!g.level.peek()?.guided) g.hint.value = 'No table found — floating tray mode. Pinch RECENTER any time.';
+      if (this.canSetHint()) g.hint.value = 'No table found â€” floating tray mode. Pinch RECENTER any time.';
     }
 
     // Face the player: board +Z points at the head.
@@ -183,6 +195,13 @@ export class PlacementSystem extends createSystem({
 
     this.placePortal();
     g.placed.value = true;
+  }
+
+  /** Placement status may only replace idle build-phase hints â€” never the
+   *  tutorial steps, a live deploy message, or SENTRY's failure explanation. */
+  private canSetHint(): boolean {
+    const g = this.g;
+    return !g.level.peek()?.guided && g.phase.peek() === 'build';
   }
 
   private placePortal(): void {
