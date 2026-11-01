@@ -15,6 +15,7 @@ built with Meta's **Immersive Web SDK (IWSDK / WebXR)**.
 ![Built with](https://img.shields.io/badge/built%20with-IWSDK%201.1%20%2B%20WebXR-7aa2ff)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
 ![Assets](https://img.shields.io/badge/downloaded%20assets-0-ff4d6d)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
 **▶ Play now:** **https://natrajexplore.github.io/packetfall_meta/**
 <br/><sub>Open in Meta Quest Browser → <b>Enter mixed reality</b>. Works in a desktop browser too.</sub>
@@ -289,5 +290,7 @@ The Vite `base` is `./`, so the build works from any sub-path.
 - Hands-first MR firewall puzzle: six campaign levels, Daily Breach, SENTRY explanations, scene-understanding placement, anchors, procedural art and audio.
 
 ## License & assets
+
+Released under the [MIT License](LICENSE) © 2026 Nataraj Angappan.
 
 All code is original to the entrant except the MIT-licensed IWSDK scaffold. No third-party art, audio, logos, brand names or identifiable people. All 3D geometry is procedural and all sound is synthesized at runtime.
