@@ -7,14 +7,14 @@ Source: official rules on Devpost (start-developer-competition-26.devpost.com/ru
 | Requirement | Status for Packetfall | Action |
 |---|---|---|
 | Age 18+, not resident of Brazil, Quebec or a sanctioned region | India is eligible | — |
-| Meta account with **Developer Access** enabled | ⬜ | Enable on developers.meta.com |
-| **Member of the Meta VR Start Program by the time of submission** | ⬜ **Critical path** | Apply today. A forum post from 25 Oct reports the Start application page failing for some users — if it fails for you, post on the competition Devpost discussion board and the Meta developer forum immediately and keep screenshots. |
-| Register on Devpost ("Join hackathon") | ⬜ | Do today |
+| Meta account with **Developer Access** enabled | ✅ logged in; app **packetfall** created in the Developer Dashboard (2 Nov 2026) | — |
+| **Member of the Meta VR Start Program by the time of submission** | ⏳ **Applied 2 Nov 2026, awaiting approval** (critical path) | Keep the confirmation screenshot. Watch email and the Start Discord for acceptance; if nothing arrives by ~9 Nov, post on the Devpost discussion board and the Meta developer forum with the screenshot. |
+| Register on Devpost ("Join hackathon") | ✅ registered | — |
 | VR/MR app for Meta VR devices | ✅ IWSDK WebXR, Quest 3/3S + VR Glasses | — |
 | Fits a track | ✅ Gaming (puzzle, seated, hands-first) | — |
 | Division | ✅ New Experience — all code written after 24 Sep 2026 | Keep git history as proof |
 | **Fully usable with hands end-to-end** ("can someone finish without pairing a controller?") | ✅ by design; every target is a RayInteractable reachable by pinch or gaze+pinch | Verify on device, controllers switched off |
-| WebXR submission: public link judges can open | ✅ GitHub Pages workflow included | Must stay live until ~11 Dec |
+| WebXR submission: public link judges can open | ✅ live at https://natrajexplore.github.io/packetfall_meta/ (GitHub Pages, auto-deploys from `main`) | Must stay live until ~11 Dec |
 | Demo video **< 3 minutes**, public on YouTube or Vimeo, footage from Quest or XR Simulator/emulator | ⬜ | See DEMO_VIDEO_SCRIPT.md |
 | Text: inspiration, how you built it, future plans, **target launch date** | ✅ drafted | See SUBMISSION.md |
 | Select Track + Division on the form | ⬜ | Gaming · New Experience |
