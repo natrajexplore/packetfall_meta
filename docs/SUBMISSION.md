@@ -40,6 +40,9 @@ Making evaluation *legible*: early versions resolved packets instantly and playe
 ## What I learned
 Teaching works better as feedback than as instructions. One sentence from SENTRY after a mistake teaches more than a paragraph before it.
 
+## Hand interactions & the future of VR
+Packetfall is built for seated play with nothing to hold. Every action — picking a rule card, dropping it into a slot, DEPLOY, RECENTER, mode and sound toggles — is a point and pinch on a hand ray, and the whole board sits within forearm reach on your desk. On Meta VR Glasses the same targets respond to gaze + pinch: look at a card and pinch either hand. You can finish the whole campaign without ever pairing a controller, and every interaction passes the airplane-seat test. What excites me is VR that fits into ordinary moments: a five-minute daily puzzle on your real desk, on glasses you already wear.
+
 ## What's next
 - High-contrast mode and a one-handed mode for accessibility
 - New rule fields (time-of-day, user groups) unlocked by rank
