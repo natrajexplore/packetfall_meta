@@ -13,7 +13,7 @@ Source: official rules on Devpost (start-developer-competition-26.devpost.com/ru
 | VR/MR app for Meta VR devices | ✅ IWSDK WebXR, Quest 3/3S + VR Glasses | — |
 | Fits a track | ✅ Gaming (puzzle, seated, hands-first) | — |
 | Division | ✅ New Experience — all code written after 24 Sep 2026 | Keep git history as proof |
-| **Fully usable with hands end-to-end** ("can someone finish without pairing a controller?") | ✅ by design; every target is a RayInteractable reachable by pinch or gaze+pinch | Verify on device, controllers switched off |
+| **Fully usable with hands end-to-end** ("can someone finish without pairing a controller?") | ✅ Gaze + pinch: full tutorial loop verified in the Meta VR Glasses emulator (12 Nov). ⬜ Quest hand-ray pinch: verify on device | Play level 1 on a Quest with controllers switched off |
 | WebXR submission: public link judges can open | ✅ live at https://natrajexplore.github.io/packetfall_meta/ (GitHub Pages, auto-deploys from `main`) | Must stay live until ~11 Dec |
 | Demo video **< 3 minutes**, public on YouTube or Vimeo, footage from Quest or XR Simulator/emulator | ⬜ | See DEMO_VIDEO_SCRIPT.md |
 | Text: inspiration, how you built it, future plans, **target launch date** | ✅ drafted | See SUBMISSION.md |

@@ -147,7 +147,7 @@ Progress, streak and the mute setting are saved on the device (`localStorage`). 
 | **Scene understanding** | `PlacementSystem` looks for a semantic `table`/`desk` mesh, then a desk-height horizontal plane in front of you, and falls back to a floating tray. A ray against vertical planes finds the wall for the portal. |
 | **Reach-aware placement** | A detected table is used only if the board lands within comfortable arm's reach (≤ 0.75 m away, ≤ 0.75 m below your head). Otherwise you get the tray, never an unreachable board. |
 | **Spatial anchors** | The board is attached to an `XRAnchor`, so it stays glued to the table through tracking drift; **RECENTER** moves it within the anchored space. |
-| **FoV-aware design** | All interactive pieces sit on a ~0.86 m × 0.42 m board in a narrow forward cone, so they fit the Meta VR Glasses' narrower field of view. |
+| **Gaze-aware placement for Meta VR Glasses** | When the session grants `gaze-tracking`, you select by looking and pinching, so reach no longer matters but the glasses' narrower view (±37° wide, +25° up, −43° down) does. The board then floats farther and higher (0.82 m ahead, 0.30 m below the eyes). Measured in the glasses emulator, every card, slot, button and panel sits inside the view with the head level (before this, 6 of 10 elements fell outside). |
 | **Seated / airplane-seat test** | Every target is within arm's reach of a seated player; no locomotion. |
 | **Fast cold start** | Zero downloaded assets: every mesh is procedural and every sound is synthesized with WebAudio. |
 | **Clean pause/resume** | The simulation freezes on `Hidden` / `VisibleBlurred` (headset off, system menu open). |
@@ -275,6 +275,11 @@ The Vite `base` is `./`, so the build works from any sub-path.
 | `npm test` fails with a syntax error | Upgrade Node to 22.18+ (TypeScript type stripping). |
 
 ## Changelog
+
+### Glasses & polish pass
+- **New:** gaze-aware placement keeps the whole board inside the Meta VR Glasses field of view (all 10 elements measured in-view, at least 2.4° inside the edge).
+- **Verified:** the full tutorial (card → slot → DEPLOY → win → NEXT) played end to end with gaze + pinch in the Meta VR Glasses emulator, no controller.
+- **Fixed:** the floating-tray hint showed garbled characters (`â€”`) on the live site; corrected text encoding.
 
 ### UX & reliability pass
 - **Fixed:** the level brief was hidden after board placement in mixed reality; it's now always on the HUD.

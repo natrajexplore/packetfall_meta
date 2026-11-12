@@ -1,5 +1,5 @@
 /**
- * PlacementSystem â€” puts the board on the player's REAL table and opens the
+ * PlacementSystem — puts the board on the player's REAL table and opens the
  * packet portal on their REAL wall, using IWSDK scene understanding.
  *
  * Search order (built to survive rooms the developer never tested):
@@ -33,9 +33,23 @@ const DESK_MIN_Y = 0.35; // low enough for a sofa + coffee table setup
 const DESK_MAX_Y = 1.2;
 const MAX_REACH = 1.6;
 /** Board centre must land within this horizontal distance of the head, and
- *  this far below it, or the cards are out of arm's reach â€” use the tray. */
+ *  this far below it, or the cards are out of arm's reach — use the tray. */
 const COMFORT_REACH = 0.75;
 const MAX_DROP = 0.75;
+/** Hands tray (Quest 3/3S): close enough to reach, at lap height. */
+const TRAY_DIST = 0.5;
+const TRAY_DROP = 0.42;
+/**
+ * Gaze sessions (Meta VR Glasses, eye-tracked headsets) select by looking and
+ * pinching, so reach no longer matters — but the glasses' view is only ±37°
+ * wide, +25° up and −43° down. A farther, higher tray keeps every card and
+ * button inside it with the head level; a table is only used if it does too.
+ */
+const GAZE_TRAY_DIST = 0.82;
+const GAZE_TRAY_DROP = 0.3;
+const GAZE_TABLE_MIN = 0.7;
+const GAZE_TABLE_MAX = 1.0;
+const GAZE_MAX_DROP = 0.34;
 
 export class PlacementSystem extends createSystem({
   planes: { required: [XRPlane] },
@@ -144,7 +158,7 @@ export class PlacementSystem extends createSystem({
     // distance from head to the nearest point of the box footprint
     const cx = Math.max(b.min.x, Math.min(this.head.x, b.max.x));
     const cz = Math.max(b.min.z, Math.min(this.head.z, b.max.z));
-    // The table centre must be in front of the player (within ~70Â° of gaze).
+    // The table centre must be in front of the player (within ~70° of gaze).
     const dx = this.p.x - this.head.x;
     const dz = this.p.z - this.head.z;
     const len = Math.hypot(dx, dz) || 1;
@@ -160,7 +174,8 @@ export class PlacementSystem extends createSystem({
 
     if (onTable) {
       const margin = 0.2;
-      this.p.copy(this.head).addScaledVector(this.fwd, 0.45);
+      const gaze = this.gazeMode();
+      this.p.copy(this.head).addScaledVector(this.fwd, gaze ? GAZE_TRAY_DIST : 0.45);
       const b = this.best;
       const midX = (b.min.x + b.max.x) / 2;
       const midZ = (b.min.z + b.max.z) / 2;
@@ -168,16 +183,25 @@ export class PlacementSystem extends createSystem({
       this.p.z = b.max.z - b.min.z > margin * 2 ? Math.max(b.min.z + margin, Math.min(this.p.z, b.max.z - margin)) : midZ;
       this.p.y = b.max.y + 0.002;
       const reach = Math.hypot(this.p.x - this.head.x, this.p.z - this.head.z);
-      if (reach > COMFORT_REACH || this.head.y - this.p.y > MAX_DROP) {
-        // The table is real but too far or too low to play on: float the tray.
+      const drop = this.head.y - this.p.y;
+      const unusable = gaze
+        ? reach < GAZE_TABLE_MIN || reach > GAZE_TABLE_MAX || drop > GAZE_MAX_DROP
+        : reach > COMFORT_REACH || drop > MAX_DROP;
+      if (unusable) {
+        // The table is real but out of reach (hands) or out of view (gaze): float the tray.
         this.place(false);
         return;
       }
       if (this.canSetHint()) g.hint.value = 'Board locked to your table. Threats will come through your wall.';
     } else {
-      this.p.copy(this.head).addScaledVector(this.fwd, 0.5);
-      this.p.y = this.head.y - 0.42;
-      if (this.canSetHint()) g.hint.value = 'No table found â€” floating tray mode. Pinch RECENTER any time.';
+      const gaze = this.gazeMode();
+      this.p.copy(this.head).addScaledVector(this.fwd, gaze ? GAZE_TRAY_DIST : TRAY_DIST);
+      this.p.y = this.head.y - (gaze ? GAZE_TRAY_DROP : TRAY_DROP);
+      if (this.canSetHint()) {
+        g.hint.value = gaze
+          ? 'Board floating in view. Look at a card and pinch. Pinch RECENTER any time.'
+          : 'No reachable table — floating tray mode. Pinch RECENTER any time.';
+      }
     }
 
     // Face the player: board +Z points at the head.
@@ -197,7 +221,14 @@ export class PlacementSystem extends createSystem({
     g.placed.value = true;
   }
 
-  /** Placement status may only replace idle build-phase hints â€” never the
+  /** True when the session targets with gaze (Meta VR Glasses / eye tracking). */
+  private gazeMode(): boolean {
+    const features = (this.world.xrSession as { enabledFeatures?: readonly string[] } | undefined)
+      ?.enabledFeatures;
+    return !!features && features.includes('gaze-tracking');
+  }
+
+  /** Placement status may only replace idle build-phase hints — never the
    *  tutorial steps, a live deploy message, or SENTRY's failure explanation. */
   private canSetHint(): boolean {
     const g = this.g;

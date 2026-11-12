@@ -19,7 +19,9 @@ npm run check   # typecheck + tests + production build
 What was verified in development:
 - Typecheck and production build pass; dev-only automation hooks are stripped from production.
 - Full logic play-through (tutorial → deploy → packets resolve → stars; trap card → 3 breaches + correct SENTRY message; retry keeps layout → promotion; daily loads).
-- In the IWSDK emulator's living room, placement put the board on the coffee table in front of the player and the portal on the far wall.
+- In the IWSDK emulator's living room the coffee table is out of arm's reach (1.65 m away, knee height), so placement correctly falls back to the floating tray.
+- **Meta VR Glasses emulator (12 Nov):** `gaze-tracking` granted; all 10 board elements measured inside the glasses' view with the head level (worst: SOUND button 34.6° sideways, limit 37°). Full tutorial played with gaze + pinch only: card → slot → DEPLOY → 6 packets resolved → win → NEXT loaded level 02.
+- Emulated hand and controller far rays could not be aimed reliably in headless automation (hover stays on the deck cards), so the Quest hand-ray path still needs the on-device check below.
 
 Known gap: in a flat desktop browser (no XR session), mouse clicks hit the wrong target in headless testing — this is IWSDK's desktop pointer bridge, which is switched off inside XR. Check it in a headed browser; it does not affect headset play, but fix it before showing desktop footage.
 
@@ -33,4 +35,4 @@ Known gap: in a flat desktop browser (no XR session), mouse clicks hit the wrong
 - [ ] Portal: room with a wall in front, room facing a window/open space
 - [ ] Headset off mid-wave → back on → resumes
 - [ ] Progress survives closing and reopening the browser
-- [ ] Meta VR Glasses emulator (`iwsdk-glasses-test` skill): all targets inside the FoV, gaze+pinch works
+- [x] Meta VR Glasses emulator (`iwsdk-glasses-test` skill): all targets inside the FoV, gaze+pinch works
