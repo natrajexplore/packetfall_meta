@@ -7,10 +7,30 @@
 
 import { VisibilityState, World } from '@iwsdk/core';
 import projectOptions from 'virtual:iwsdk-project';
+import { setHighContrast } from './game/labels.ts';
+import { loadHighContrast, saveHighContrast } from './game/progress.ts';
 import { sfx } from './game/sfx.ts';
 import { GameSystem } from './systems/game-system.js';
 import { PacketSystem } from './systems/packet-system.js';
 import { PlacementSystem } from './systems/placement-system.js';
+
+// Accessibility: high-contrast text, chosen on the landing screen and remembered.
+// Applied before the world exists so every label is drawn in the right mode.
+const contrastBtn = document.getElementById('contrast') as HTMLButtonElement | null;
+const applyContrast = (on: boolean) => {
+  setHighContrast(on);
+  document.body.classList.toggle('hc', on);
+  if (contrastBtn) {
+    contrastBtn.setAttribute('aria-pressed', String(on));
+    contrastBtn.textContent = `High-contrast text: ${on ? 'On' : 'Off'}`;
+  }
+};
+applyContrast(loadHighContrast());
+contrastBtn?.addEventListener('click', () => {
+  const on = contrastBtn.getAttribute('aria-pressed') !== 'true';
+  applyContrast(on);
+  saveHighContrast(on);
+});
 
 World.create(
   document.getElementById('scene-container') as HTMLDivElement,

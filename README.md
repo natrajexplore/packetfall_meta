@@ -162,6 +162,8 @@ Progress, streak and the mute setting are saved on the device (`localStorage`). 
 - **Ticket scoreboard:** `TICKETS 5/8`, with every failure labelled **BREACH** or **OUTAGE**.
 - **Friendly landing page:** the button stays in a *Loading…* state until the world is ready, a failed XR launch falls back to the in-browser board, and leaving the headset offers **Re-enter mixed reality**.
 - **Accessible audio:** procedural, short and never essential; mute is one pinch and remembered.
+- **High-contrast text:** one toggle on the start screen switches every in-world panel to opaque black with white borders and bold white text (ALLOW/DENY stay spelled out, tickets keep ✓/✗, so nothing relies on colour alone). Remembered on the device.
+- **Private by design:** no account, no analytics, no network calls; progress lives only in the browser's local storage.
 
 ## Architecture
 

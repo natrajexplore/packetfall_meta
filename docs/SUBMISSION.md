@@ -33,6 +33,8 @@ Packetfall is built with Meta's Immersive Web SDK on Three.js, using its entity-
 - **A pure, tested rule engine** shared by the campaign, the daily generator and SENTRY. The daily generator rejects puzzles that are trivially solvable, contain dead rules, or can't distinguish the right answer — a test suite checks a full year of generated puzzles.
 - **Zero downloads at launch:** every mesh is procedural and every sound is synthesized with WebAudio, so cold start is near-instant.
 - **Clean pause/resume:** the simulation freezes whenever the headset is blurred or removed.
+- **Accessibility:** a high-contrast text mode (opaque black panels, white borders, bold white text), select-then-place input with no fine-motor dragging, and no information carried by colour alone — ALLOW/DENY are spelled out and tickets show ✓/✗.
+- **Private by design:** no account, no analytics, no network calls; progress stays on the device.
 
 ## Challenges
 Making evaluation *legible*: early versions resolved packets instantly and players couldn't see why. Slowing each packet to dwell on every rule — and flashing the rule that matched green or red — turned an invisible algorithm into something you can watch. Placement was the other hard part: the nearest table is often behind you or a side table, so candidates are filtered and scored by view direction.
@@ -44,7 +46,7 @@ Teaching works better as feedback than as instructions. One sentence from SENTRY
 Packetfall is built for seated play with nothing to hold. Every action — picking a rule card, dropping it into a slot, DEPLOY, RECENTER, mode and sound toggles — is a point and pinch on a hand ray, and the whole board sits within forearm reach on your desk. On Meta VR Glasses the same targets respond to gaze + pinch: look at a card and pinch either hand. You can finish the whole campaign without ever pairing a controller, and every interaction passes the airplane-seat test. What excites me is VR that fits into ordinary moments: a five-minute daily puzzle on your real desk, on glasses you already wear.
 
 ## What's next
-- High-contrast mode and a one-handed mode for accessibility
+- A one-handed mode and adjustable text size for accessibility
 - New rule fields (time-of-day, user groups) unlocked by rank
 - A weekly "incident" level with a story
 - Shared-room co-op: one player writes rules, the other triages packets

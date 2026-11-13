@@ -55,7 +55,7 @@ Only **one prize per entry**. Gaming New: $100k winner / $50k runner-up. Special
 | **Boldest Original Concept** | ★★★ | Threats through your own wall onto your own desk; collapses without presence and room geometry |
 | **Best Reason to Come Back** | ★★★ | Daily Breach (same seed worldwide), streaks, XP ranks, stars per level |
 | **Best First Five Minutes** | ★★★ | No menus; guided pinch tutorial; payoff (packets flying) inside 60 seconds |
-| **Best Accessibility Forward** | ★★ | Gaze+pinch path, select-then-place (no fine motor drag), seated; add high-contrast + one-hand mode to strengthen |
+| **Best Accessibility Forward** | ★★ | Gaze+pinch path, select-then-place (no fine motor drag), seated; ✅ high-contrast text mode (13 Nov); one-hand mode still open |
 | Best Agentic Interaction | ★ | SENTRY is rule-based. Only claim it if you add a genuine AI component — don't oversell |
 | Social & Multiplayer | ✗ | Out of scope for 17 days |
 

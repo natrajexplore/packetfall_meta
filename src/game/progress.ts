@@ -82,6 +82,24 @@ export function saveMuted(m: boolean): void {
   }
 }
 
+const CONTRAST_KEY = 'packetfall.contrast.v1';
+
+export function loadHighContrast(): boolean {
+  try {
+    return localStorage.getItem(CONTRAST_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function saveHighContrast(on: boolean): void {
+  try {
+    localStorage.setItem(CONTRAST_KEY, on ? '1' : '0');
+  } catch {
+    /* storage unavailable */
+  }
+}
+
 export function saveProgress(p: Progress): void {
   try {
     localStorage.setItem(KEY, JSON.stringify(p));
