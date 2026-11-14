@@ -270,6 +270,19 @@ export class GameSystem extends createSystem({
     const rule = e.getValue(RuleCard, 'rule') as number;
     const slot = e.getValue(RuleCard, 'slot') as number;
     if (slot >= 0) {
+      const sel = g.selectedCard.peek();
+      if (sel >= 0 && sel !== rule) {
+        // A card is in hand and the player pinched a placed card: swap them.
+        // The placed card covers its slot, so this is how a slot gets replaced.
+        e.setValue(RuleCard, 'slot', -1);
+        for (const c of this.queries.cards.entities) {
+          if (c.getValue(RuleCard, 'rule') === sel) c.setValue(RuleCard, 'slot', slot);
+        }
+        g.selectedCard.value = -1;
+        sfx.place();
+        g.hudVersion.value++;
+        return;
+      }
       // Pull a placed card back to the deck.
       e.setValue(RuleCard, 'slot', -1);
       g.selectedCard.value = -1;

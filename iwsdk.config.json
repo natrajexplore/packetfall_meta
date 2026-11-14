@@ -55,7 +55,7 @@
       "sceneUnderstanding": true,
       "environmentRaycast": false,
       "gaze": {
-        "coneAngle": 6,
+        "coneAngle": 2.5,
         "logDiagnostics": false
       }
     }
