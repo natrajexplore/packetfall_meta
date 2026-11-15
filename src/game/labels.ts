@@ -91,6 +91,8 @@ export function createLabel(widthM: number, heightM: number, pxPerM = 1400): Lab
   });
   const mesh = new Mesh(new PlaneGeometry(widthM, heightM), mat);
   mesh.renderOrder = 10;
+  // Text panels are display-only: rays pass through to the card/button behind.
+  mesh.raycast = () => {};
 
   const fontFor = (line: LabelLine, size: number) =>
     `${highContrast ? Math.max(700, line.weight ?? 600) : (line.weight ?? 600)} ${size}px ${FONT}`;

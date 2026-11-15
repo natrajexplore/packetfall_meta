@@ -76,6 +76,14 @@ World.create(
     });
   }
 
+  // Hide the landing card however the session starts (page button, emulator
+  // toolbar, or the browser's own XR prompt). The visibility handler below
+  // brings it back with a "Re-enter" button when the session ends.
+  world.renderer.xr.addEventListener('sessionstart', () => {
+    wasImmersive = true;
+    overlay?.classList.add('hidden');
+  });
+
   world.visibilityState.subscribe((v) => {
     if (v !== VisibilityState.NonImmersive) {
       wasImmersive = true;

@@ -120,7 +120,7 @@ export class PlacementSystem extends createSystem({
       if (!e.object3D) continue;
       this.box.setFromObject(e.object3D);
       const d = this.horizontalDistance(this.box);
-      if (d < bestDist && d < MAX_REACH * 1.25) {
+      if (d < bestDist) {
         bestDist = d;
         this.best.copy(this.box);
       }
@@ -134,7 +134,7 @@ export class PlacementSystem extends createSystem({
       const y = this.box.max.y;
       if (thick > 0.05 || y < DESK_MIN_Y || y > DESK_MAX_Y) continue;
       const d = this.horizontalDistance(this.box);
-      if (d < bestDist && d < MAX_REACH * 1.25) {
+      if (d < bestDist) {
         bestDist = d;
         this.best.copy(this.box);
       }
@@ -164,8 +164,10 @@ export class PlacementSystem extends createSystem({
     const len = Math.hypot(dx, dz) || 1;
     const align = (dx * this.fwd.x + dz * this.fwd.z) / len;
     if (align < 0.35) return Infinity;
+    const reach = Math.hypot(cx - this.head.x, cz - this.head.z);
+    if (reach > MAX_REACH) return Infinity; // out of reach → floating tray instead
     // Score: near AND centred in view wins (a table dead ahead beats one off to the side).
-    return Math.hypot(cx - this.head.x, cz - this.head.z) * (1.6 - align);
+    return reach * (1.6 - align);
   }
 
   private place(onTable: boolean): void {
@@ -233,6 +235,13 @@ export class PlacementSystem extends createSystem({
   private canSetHint(): boolean {
     const g = this.g;
     return !g.level.peek()?.guided && g.phase.peek() === 'build';
+  }
+
+  /** Show where the board went WITHOUT hiding the level's instructions. */
+  private note(msg: string): void {
+    const level = this.g.level.peek();
+    if (!level || level.guided || this.g.phase.peek() !== 'build') return;
+    this.g.hint.value = `${level.brief}  (${msg})`;
   }
 
   private placePortal(): void {

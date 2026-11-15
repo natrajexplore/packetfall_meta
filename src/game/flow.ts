@@ -54,4 +54,5 @@ export function finishRun(g: GameState): void {
   }
   g.phase.value = 'result';
   g.hudVersion.value++;
+  if (import.meta.env.DEV) console.info(`[pf] result win=${g.lastWin} level=${level.id} deploys=${g.deploys} hint=${g.hint.peek()}`);
 }

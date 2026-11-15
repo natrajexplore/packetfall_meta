@@ -34,7 +34,7 @@ Packetfall is built with Meta's Immersive Web SDK on Three.js, using its entity-
 - **Zero downloads at launch:** every mesh is procedural and every sound is synthesized with WebAudio, so cold start is near-instant.
 - **Clean pause/resume:** the simulation freezes whenever the headset is blurred or removed.
 - **Accessibility:** a high-contrast text mode (opaque black panels, white borders, bold white text), select-then-place input with no fine-motor dragging, and no information carried by colour alone — ALLOW/DENY are spelled out and tickets show ✓/✗.
-- **Private by design:** no account, no analytics, no network calls; progress stays on the device.
+- **Private by design:** no account, no analytics, nothing about the player leaves the headset; progress stays on the device. (The only downloads are the standard WebXR hand/controller models.)
 
 ## Challenges
 Making evaluation *legible*: early versions resolved packets instantly and players couldn't see why. Slowing each packet to dwell on every rule — and flashing the rule that matched green or red — turned an invisible algorithm into something you can watch. Placement was the other hard part: the nearest table is often behind you or a side table, so candidates are filtered and scored by view direction.

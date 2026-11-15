@@ -135,11 +135,18 @@ export class GameSystem extends createSystem({
     this.makeButton('sound', LAYOUT.soundBtn, NEUTRAL_BTN, 0.02);
 
     // --- interaction ------------------------------------------------------
-    this.queries.cardPressed.subscribe('qualify', (e) => this.onCard(e));
-    this.queries.slotPressed.subscribe('qualify', (e) => this.onSlot(e));
+    this.queries.cardPressed.subscribe('qualify', (e) => {
+      this.onCard(e);
+      this.devLog(e);
+    });
+    this.queries.slotPressed.subscribe('qualify', (e) => {
+      this.onSlot(e);
+      this.devLog(e);
+    });
     this.queries.buttonPressed.subscribe('qualify', (e) => {
       sfx.unlock();
       this.onButton(e.getValue(UIButton, 'action') as ButtonAction);
+      this.devLog(e);
     });
 
     this.cleanupFuncs.push(
@@ -256,6 +263,15 @@ export class GameSystem extends createSystem({
     });
 
     g.hudVersion.value++;
+  }
+
+  /** Dev-only: one log line per press, readable via `npx @iwsdk/cli browser logs`. */
+  private devLog(e: Entity): void {
+    if (!import.meta.env.DEV) return;
+    const g = this.g;
+    console.info(
+      `[pf] press=${e.object3D?.name} sel=${g.selectedCard.peek()} phase=${g.phase.peek()} hint=${g.hint.peek().slice(0, 40)}`,
+    );
   }
 
   // ------------------------------------------------------------------------
@@ -560,7 +576,11 @@ export class GameSystem extends createSystem({
         anyDeck = true;
         this.target.set((deckIdx - (deckCount - 1) / 2) * LAYOUT.deckSpacing, 0.03, LAYOUT.deckZ);
         deckIdx++;
-        if (rule === sel) this.target.y += 0.045 + Math.sin(this.clock * 6) * 0.004;
+        // Lift the selected card only once the pinch is released. Lifting it
+        // while the fingers are still closed slides it out from under the ray,
+        // the release never reaches it, and the player's next pinch (on a slot)
+        // is swallowed as that missing release.
+        if (rule === sel && !c.hasComponent(Pressed)) this.target.y += 0.045 + Math.sin(this.clock * 6) * 0.004;
       }
       o.position.lerp(this.target, k);
       o.rotation.x += (tiltX - o.rotation.x) * k;

@@ -62,6 +62,17 @@ export const ALLOW_COLOR = 0x2ee59d;
 export const DENY_COLOR = 0xff4d6d;
 export const ACCENT = 0x7aa2ff;
 
+/**
+ * Decorative outline that never takes ray hits. Three.js tests lines with a
+ * wide distance threshold, so a pickable outline steals clicks and hand-ray
+ * pinches meant for neighbouring cards, slots and buttons.
+ */
+function outline(geo: EdgesGeometry, mat: LineBasicMaterial): LineSegments {
+  const l = new LineSegments(geo, mat);
+  l.raycast = () => {};
+  return l;
+}
+
 export function plateMesh(): Group {
   const g = new Group();
   const { w, d } = LAYOUT.plate;
@@ -75,7 +86,7 @@ export function plateMesh(): Group {
     }),
   );
   plate.position.y = 0.003;
-  const edge = new LineSegments(
+  const edge = outline(
     new EdgesGeometry(plate.geometry),
     new LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.85 }),
   );
@@ -92,7 +103,7 @@ export function firewallMesh(slots: number): Group {
     new MeshStandardMaterial({ color: 0x111a33, emissive: 0x0a1230, roughness: 0.4 }),
   );
   slab.position.set(LAYOUT.stackX, slotY(slots - 1) - 0.06 + h / 2, LAYOUT.stackZ - 0.012);
-  const edge = new LineSegments(
+  const edge = outline(
     new EdgesGeometry(slab.geometry),
     new LineBasicMaterial({ color: ACCENT }),
   );
@@ -109,12 +120,15 @@ export function firewallMesh(slots: number): Group {
 }
 
 export function slotMesh(): Mesh {
+  // The pickable box fills the whole row (gap height, 2 cm deep) so a pinch
+  // still lands when closing the fingers nudges the hand ray. The visible glow
+  // is the thinner child panel.
   const m = new Mesh(
-    new BoxGeometry(LAYOUT.slotW, LAYOUT.slotH, 0.004),
-    new MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.16 }),
+    new BoxGeometry(LAYOUT.slotW + 0.01, LAYOUT.slotGap * 0.96, 0.02),
+    new MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.16, depthWrite: false }),
   );
-  const edge = new LineSegments(
-    new EdgesGeometry(m.geometry),
+  const edge = outline(
+    new EdgesGeometry(new BoxGeometry(LAYOUT.slotW, LAYOUT.slotH, 0.004)),
     new LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.9 }),
   );
   m.add(edge);
@@ -132,7 +146,7 @@ export function cardMesh(allow: boolean): Mesh {
       roughness: 0.35,
     }),
   );
-  const edge = new LineSegments(
+  const edge = outline(
     new EdgesGeometry(m.geometry),
     new LineBasicMaterial({ color: allow ? ALLOW_COLOR : DENY_COLOR }),
   );
