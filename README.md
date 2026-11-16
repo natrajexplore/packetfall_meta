@@ -26,22 +26,43 @@ built with Meta's **Immersive Web SDK (IWSDK / WebXR)**.
 
 ## Contents
 
+- [At a glance](#at-a-glance)
 - [The pitch](#the-pitch)
+- [Demo video](#demo-video)
 - [Screenshots](#screenshots)
 - [How to play](#how-to-play)
+- [Reading the board](#reading-the-board)
 - [Controls](#controls)
+- [Walkthrough: levels 01–03 (spoilers)](#walkthrough-levels-0103-spoilers)
 - [Campaign, Daily Breach & progression](#campaign-daily-breach--progression)
+- [What you learn by playing](#what-you-learn-by-playing)
 - [How it uses Meta VR](#how-it-uses-meta-vr)
 - [UX details that make it feel seamless](#ux-details-that-make-it-feel-seamless)
 - [Architecture](#architecture)
 - [Getting started (development)](#getting-started-development)
+- [Play it without a headset](#play-it-without-a-headset)
 - [Testing](#testing)
 - [Deploying](#deploying)
 - [Troubleshooting](#troubleshooting)
+- [Roadmap](#roadmap)
+- [Glossary](#glossary)
 - [Changelog](#changelog)
 - [License & assets](#license--assets)
 
 ---
+
+## At a glance
+
+| | |
+|---|---|
+| **Genre** | Seated mixed-reality logic puzzle |
+| **Play it** | https://natrajexplore.github.io/packetfall_meta/ (no install, no account) |
+| **Devices** | Meta Quest 3 / 3S (hands), Meta VR Glasses (gaze + pinch), any desktop browser (mouse) |
+| **Input** | Hands only, no controller needed. Every action is *point (or look) and pinch* |
+| **Session** | Bite-sized: a level takes a minute or two; a new Daily Breach every day |
+| **Content** | 6 campaign levels + an endless, date-seeded Daily Breach |
+| **Download size** | Zero assets: all meshes procedural, all sound synthesized |
+| **Privacy** | No account, no analytics, no network calls |
 
 ## The pitch
 
@@ -50,6 +71,12 @@ You build a firewall policy by **pinching rule cards into a rule stack**. Hit **
 Every packet carries a **change ticket** (PASS or BLOCK). Get one wrong and **SENTRY**, the in-game analyst, tells you in one sentence which rule fired and why. Fix it, redeploy, earn stars, climb from **SOC Intern** to **Zero-Trust Legend**, and come back tomorrow for a new **Daily Breach** that every player in the world gets on the same day.
 
 It is a real puzzle about a real skill: **top-down, first-match rule evaluation** is exactly how enterprise firewalls and ACLs decide traffic. No jargon walls: the board teaches it.
+
+## Demo video
+
+[![Packetfall demo video: real gameplay, under 3 minutes](https://img.youtube.com/vi/ejrKlPQhcq8/hqdefault.jpg)](https://youtu.be/ejrKlPQhcq8)
+
+**▶ https://youtu.be/ejrKlPQhcq8**: real gameplay recorded in the IWSDK headset emulator, under 3 minutes. It walks through the guided first level, the *ALLOW ANY* trap and SENTRY's explanation, and a first-match-wins ordering puzzle being fixed and redeployed.
 
 ## Screenshots
 
@@ -72,6 +99,26 @@ It is a real puzzle about a real skill: **top-down, first-match rule evaluation*
 
 > **The one rule to remember:** *rules are checked top-down and the first match wins.* A broad ALLOW above a narrow DENY means the DENY never fires.
 
+## Reading the board
+
+**Rule cards** read like a real firewall rule: `ACTION APP · FROM → TO`, e.g. **ALLOW HTTPS · INTERNET → WEB** or **DENY SSH · ANY → ANY**. Green cards allow, red cards deny.
+
+**Packets** tell you who they are before you even inspect them:
+
+| You see | It means |
+|---|---|
+| Faceted ball (icosahedron) | Comes from the **INTERNET** |
+| Diamond (octahedron) | Comes from the **BRANCH** office |
+| 🟢 green | HTTPS (web) |
+| 🔵 cyan | DNS |
+| 🟡 yellow | SSH (remote admin) |
+| 🟣 purple | SMB (file sharing) |
+| 🟠 orange | SMTP (mail) |
+
+**Destinations** are the three server towers: **WEB**, **DNS** and **DB**. An allowed packet flies to its tower and the tower pulses.
+
+**Change tickets** are the spec. Each line says what *should* happen to one packet, e.g. `PASS HTTPS INET→WEB` or `BLOCK SMB INET→DB`. After a deploy each ticket gets ✓ or ✗, and the HUD shows the score (`TICKETS 6/6`).
+
 ## Controls
 
 No controller is ever required. Every target is a ray-interactable, so hands, gaze, controllers and the mouse all drive the same flow.
@@ -81,6 +128,7 @@ No controller is ever required. Every target is a ray-interactable, so hands, ga
 | Select a rule card | Point and pinch | Look and pinch | Click |
 | Place it | Pinch an empty slot | Look at slot, pinch | Click |
 | Return a placed card | Pinch it (or its slot) again | Look, pinch | Click |
+| Swap two cards | Pinch a deck card, then pinch a placed card | Look, pinch, look, pinch | Click, click |
 | Inspect a packet | Point at it | Look at it | Hover |
 | Slow-mo trace a packet | Pinch it | Look, pinch | Click |
 | Deploy / Next / Retry | Pinch the big button | Look, pinch | Click |
@@ -96,6 +144,29 @@ The big button's colour always tells you what it will do:
 | ⚪ grey | **RUNNING…** | Packets in flight, so the rules are locked |
 | 🟠 amber | **FIX & RETRY** | Some tickets failed; your layout is kept so you can fix it |
 | 🔵 blue | **NEXT ▶ / DAILY ▶ / CAMPAIGN ▶** | Solved: move on |
+
+## Walkthrough: levels 01–03 (spoilers)
+
+<details>
+<summary><b>Show the solutions and what you should see</b></summary>
+
+**01 · Open for Business** (1 slot, 1 card, guided)
+1. Pinch the glowing **ALLOW HTTPS · INTERNET → WEB** card, then the glowing slot **#1**, then **DEPLOY**.
+2. Web packets reach the WEB tower; the SSH and SMB packets fall through to the red default-deny bar.
+3. Result: **TICKETS 6/6**, ★★★ *Policy verified in 1 deploy*, green border, and the button turns **NEXT ▶**.
+
+**02 · Not So Fast, Any-Any** (1 slot, 2 cards)
+1. Try the trap first: put **ALLOW ANY · ANY → ANY** in slot #1 and deploy.
+2. SMB and SSH get in: **3 tickets fail (4/7)**. SENTRY names the packet and says it hit rule #1 (*ALLOW ANY*) first. Button: **FIX & RETRY**.
+3. Pinch **FIX & RETRY**, pinch **ALLOW HTTPS · INTERNET → WEB**, then pinch the placed ANY card to swap them. Deploy.
+4. Result: **7/7**, and on your first clear **PROMOTED → SOC ANALYST**.
+
+**03 · First Match Wins** (2 slots, 2 cards)
+1. The tempting order, **DENY SSH · ANY → ANY** on top and **ALLOW SSH · BRANCH → ANY** below, blocks the branch admins too: **3/6**, and SENTRY tells you to move the ALLOW above the DENY.
+2. Swap them so **ALLOW SSH · BRANCH → ANY is #1** and **DENY SSH · ANY → ANY is #2**. Deploy.
+3. Result: **6/6**. Branch SSH passes and internet SSH is denied.
+
+</details>
 
 ## Campaign, Daily Breach & progression
 
@@ -136,6 +207,17 @@ Campaign stars grant **100 XP each** (only improvements count). A Daily win gran
 | 7,500 | Zero-Trust Legend |
 
 Progress, streak and the mute setting are saved on the device (`localStorage`). Private windows or blocked storage never break the game; progress then lasts for the session.
+
+## What you learn by playing
+
+Packetfall teaches a real network-security skill without a single wall of text:
+
+1. **Rules run top-down and the first match wins.** You watch each packet stop at #1, #2, #3.
+2. **Anything not explicitly allowed is dropped** by the implicit default-deny at the bottom of the stack.
+3. **Broad "ANY" allows are dangerous.** Level 02's trap lets SMB and SSH straight into your servers.
+4. **Rule shadowing:** a broad rule above a specific one makes the specific one dead (levels 03 and 06).
+5. **Segmentation:** the branch may reach the database; the internet never may (level 05).
+6. **The ticket is the spec, not your assumption.** SENTRY explains the gap between what you built and what was asked.
 
 ## How it uses Meta VR
 
@@ -245,6 +327,18 @@ npm run dev        # managed browser + IWER headset emulator with a virtual livi
 
 For a Quest connected over USB, or for Meta VR Glasses (gaze + pinch, narrower field of view), see the [IWSDK testing guide](https://iwsdk.dev/guides/02-testing-experience.html).
 
+## Play it without a headset
+
+The public link works in any desktop browser: click the board's cards, slots and buttons with the mouse.
+
+To try the **mixed-reality** version on a PC, run `npm run dev`. It opens IWER, the IWSDK headset emulator, in a virtual living room:
+
+1. Click **Enter mixed reality**.
+2. In the emulator toolbar choose **Hands**, then **Play mode**. The mouse now turns your head; **Esc** releases it.
+3. Put the centre of the view on a card, slot or button and press the **right mouse button** to pinch.
+
+Look-and-pinch needs an emulated device with eye tracking: set `dev.emulator.device` to `metaQuestPro` (or `metaVRGlasses`) in `iwsdk.config.json`. On `metaQuest3` you aim with the emulated hand's ray instead. To start over as a new player, open DevTools → Console → `localStorage.clear()` and reload.
+
 ## Testing
 
 ```bash
@@ -275,8 +369,44 @@ The Vite `base` is `./`, so the build works from any sub-path.
 | No sound | Sound starts after your first pinch or click (browser autoplay rules). Check the **SOUND** button isn't OFF. |
 | Progress lost | You're in a private window or site data was cleared; progress is stored per device. |
 | `npm test` fails with a syntax error | Upgrade Node to 22.18+ (TypeScript type stripping). |
+| A pinch did nothing | Aim at the middle of the card, slot or button and pinch again; targets brighten when your ray or gaze is on them. |
+| Picked the wrong card | Pinch the one you want instead, or pinch a placed card while holding another to swap them. |
+| Emulator: clicking does nothing in mixed reality | Mouse clicks aren't pinches in XR. Switch to **Hands** + **Play mode** and use the right mouse button (see [Play it without a headset](#play-it-without-a-headset)). |
+| Emulator: the toolbar's gaze option is greyed out | The emulated device has no eye tracking (Quest 3). Use `metaQuestPro` or `metaVRGlasses` in `iwsdk.config.json`. |
+| Browser warns about the certificate on `localhost` | Expected: the dev server uses a self-signed certificate. The public GitHub Pages link has a valid one. |
+
+## Roadmap
+
+- A one-handed mode and adjustable text size
+- New rule fields (time of day, user groups) unlocked by rank
+- A weekly "incident" level with a story
+- Shared-room co-op: one player writes rules, the other triages packets
+
+**Target launch:** Meta Horizon Store / web release in **Q1 2027**.
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| **XR / mixed reality** | An immersive session in a headset or glasses. In mixed reality (passthrough) the game is drawn on top of your real room. |
+| **WebXR** | The browser standard that lets a web page run an XR session, with no app-store install. |
+| **IWSDK** | Meta's [Immersive Web SDK](https://iwsdk.dev/), the WebXR framework Packetfall is built on. |
+| **IWER** | IWSDK's browser-based headset emulator, used for development and the demo recording. |
+| **ECS** | Entity-component system: objects are entities carrying small data components; systems hold the behaviour. |
+| **Firewall rule / ACL** | An ordered list of ALLOW / DENY lines that decides which traffic may pass. |
+| **First match wins** | Rules are read top-down; the first rule that matches a packet decides its fate. |
+| **Default deny** | Traffic that matches no rule is dropped. |
+| **Shadowing** | A broad rule above a narrower one makes the narrower one unreachable. |
+| **SOC** | Security Operations Center, where analysts watch and defend a network. |
 
 ## Changelog
+
+### Submission pass (Nov 2026)
+- **New:** public [demo video](https://youtu.be/ejrKlPQhcq8) and Devpost submission (Gaming · New Experience).
+- **New:** pinch a placed card while holding another to **swap** them, so a slot can be replaced in one move.
+- **Fixed:** with gaze input, stacked slots were hard to target; the gaze cone is tighter (6° → 2.5°).
+- **New:** **high-contrast text** toggle on the start screen, plus a privacy note.
+- **New:** original Packetfall favicon and theme colour.
 
 ### Glasses & polish pass
 - **New:** gaze-aware placement keeps the whole board inside the Meta VR Glasses field of view (all 10 elements measured in-view, at least 2.4° inside the edge).
