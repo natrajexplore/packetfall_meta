@@ -17,7 +17,7 @@ built with Meta's **Immersive Web SDK (IWSDK / WebXR)**.
 ![Assets](https://img.shields.io/badge/downloaded%20assets-0-ff4d6d)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
-**▶ Play now:** **https://natrajexplore.github.io/packetfall_meta/**
+**▶ Play now:** **https://natrajexplore.github.io/packetfall_meta/** &nbsp;·&nbsp; **🎬 Demo video:** **https://youtu.be/ejrKlPQhcq8**
 <br/><sub>Open in Meta Quest Browser → <b>Enter mixed reality</b>. Works in a desktop browser too.</sub>
 
 </div>

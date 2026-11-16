@@ -3,7 +3,7 @@
 **Track:** Gaming  **Division:** New Experience
 **Project link:** https://natrajexplore.github.io/packetfall_meta/ (GitHub Pages, IWSDK/WebXR)  
 **Source:** https://github.com/natrajexplore/packetfall_meta
-**Video:** `<YouTube or Vimeo, public, under 3:00>`
+**Video:** https://youtu.be/ejrKlPQhcq8
 **Built with:** Immersive Web SDK (IWSDK), WebXR, Three.js, TypeScript, Vite, WebAudio
 
 ---

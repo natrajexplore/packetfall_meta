@@ -15,9 +15,9 @@ Source: official rules on Devpost (start-developer-competition-26.devpost.com/ru
 | Division | ✅ New Experience — all code written after 24 Sep 2026 | Keep git history as proof |
 | **Fully usable with hands end-to-end** ("can someone finish without pairing a controller?") | ✅ Gaze + pinch: full tutorial loop verified in the Meta VR Glasses emulator (12 Nov). ⬜ Quest hand-ray pinch: verify on device | Play level 1 on a Quest with controllers switched off |
 | WebXR submission: public link judges can open | ✅ live at https://natrajexplore.github.io/packetfall_meta/ (GitHub Pages, auto-deploys from `main`) | Must stay live until ~11 Dec |
-| Demo video **< 3 minutes**, public on YouTube or Vimeo, footage from Quest or XR Simulator/emulator | ⬜ | See DEMO_VIDEO_SCRIPT.md |
+| Demo video **< 3 minutes**, public on YouTube or Vimeo, footage from Quest or XR Simulator/emulator | ✅ https://youtu.be/ejrKlPQhcq8 (emulator footage) | Keep it public until judging ends |
 | Text: inspiration, how you built it, future plans, **target launch date** | ✅ drafted | See SUBMISSION.md |
-| Select Track + Division on the form | ⬜ | Gaming · New Experience |
+| Select Track + Division on the form | ✅ submitted on Devpost 16 Nov 2026 | Gaming · New Experience |
 | English | ✅ | — |
 | Original; third-party assets properly licensed | ✅ zero third-party assets | — |
 | No logos, brand names, slogans, identifiable people | ✅ protocol names only (HTTPS, DNS, SSH, SMB, SMTP) — no vendor names in-game | Keep it that way in the video too |
